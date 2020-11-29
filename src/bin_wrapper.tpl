@@ -41,7 +41,6 @@ cmd_foo() {
   echo foo
 }
 
-cmd="$1"
 case "$1" in
   # Delete below snippet if you don't want a fzf sub command.
   fzf)
@@ -50,6 +49,7 @@ case "$1" in
     # Fall through
 
   foo)
+    cmd="$1"
     shift
     case "$1" in
       -h)
