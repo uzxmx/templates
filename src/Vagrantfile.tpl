@@ -5,10 +5,11 @@ Vagrant.configure('2') do |config|
   ## Set base box.
   # config.vm.box = 'centos/7'
 
-  ## Configure memory and the number of CPU.
+  ## Basic configurations for VirtualBox.
   # config.vm.provider :virtualbox do |vb|
-  #   vb.memory = 2048
+  #   vb.memory = 2 * 1024
   #   vb.cpus = 4
+  #   vb.gui = false
   # end
 
   ## Configure plugins.
@@ -31,6 +32,10 @@ Vagrant.configure('2') do |config|
   # config.vm.provision :shell, run: :always, inline: <<-SHELL
   #   echo foo
   # SHELL
+
+  ## Forward data from a port on the host to a port on the guest.
+  ## For more info, see https://www.vagrantup.com/docs/networking/forwarded_ports.
+  # config.vm.network :forwarded_port, host: 8080, guest: 80
 
   ## Use `VBoxManage list bridgedifs` to get all network interfaces. When
   ## omitting `bridge` option, Vagrant will ask you to select an interface. The
