@@ -6,6 +6,8 @@
 
 set -eo pipefail
 
+dotfiles_dir="$(dirname "$BASH_SOURCE")/.."
+
 usage() {
   cat <<-EOF 1>&2
 Wrapper for WRAPPER utility.
@@ -18,8 +20,8 @@ EOF
 }
 
 # Delete below snippet if you don't want a wrapper.
-source ~/.dotfiles/scripts/lib/path.sh
-PATH=$(new_path_exclude ~/.dotfiles/bin)
+source "$dotfiles_dir/scripts/lib/path.sh"
+PATH="$(new_path_exclude "$dotfiles_dir/bin")"
 
 # Delete below snippet if you don't want a fzf sub command.
 FZF_COMMANDS="Command description\techo foo
@@ -44,7 +46,7 @@ cmd_foo() {
 case "$1" in
   # Delete below snippet if you don't want a fzf sub command.
   fzf)
-    source ~/.dotfiles/scripts/lib/cmd_fzf.sh
+    source "$dotfiles_dir/scripts/lib/cmd_fzf.sh"
     ;&
     # Fall through
 
