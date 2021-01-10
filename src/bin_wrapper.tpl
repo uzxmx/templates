@@ -4,12 +4,12 @@
 # Template for a wrapper utility or plain old executable. Substitute `WRAPPER`
 # with a real name, or do as the comments indicate.
 
-set -eo pipefail
+set -e
 
-dotfiles_dir="$(dirname "$BASH_SOURCE")/.."
+dotfiles_dir="$(realpath "$(dirname "$BASH_SOURCE")/..")"
 
 usage() {
-  cat <<-EOF 1>&2
+  cat <<-EOF
 Wrapper for WRAPPER utility.
 
 Subcommands:
@@ -27,8 +27,39 @@ PATH="$(new_path_exclude "$dotfiles_dir/bin")"
 FZF_COMMANDS="Command description\techo foo
 "
 
+alias_cmd() {
+  local new_name="$1"
+  local old_name="$2"
+  eval "
+    usage_$new_name() {
+      usage_$old_name \"\$@\"
+    }
+    cmd_$new_name() {
+      cmd_$old_name \"\$@\"
+    }
+  "
+}
+
+process_common_options() {
+  local -a remainder
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -w)
+        shift
+        workspace="$2"
+        ;;
+      *)
+        remainder+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  set - "${remainder[@]}"
+}
+
 usage_foo() {
-  cat <<-EOF 1>&2
+  cat <<-EOF
 Usage: WRAPPER foo <arg>
 
 Some description.
@@ -43,22 +74,31 @@ cmd_foo() {
   echo foo
 }
 
+alias_cmd f foo
+
+run() {
+  local cmd="$1"
+  shift
+  case "$1" in
+    -h)
+      type "usage_$cmd" &>/dev/null && "usage_$cmd"
+      ;;
+  esac
+  "cmd_$cmd" "$@"
+}
+
 case "$1" in
   # Delete below snippet if you don't want a fzf sub command.
   fzf)
     source "$dotfiles_dir/scripts/lib/cmd_fzf.sh"
-    ;&
+    # The following line is commented to support old versions of bash.
+    # ;&
     # Fall through
+    run "$@"
+    ;;
 
   foo)
-    cmd="$1"
-    shift
-    case "$1" in
-      -h)
-        type "usage_$cmd" &>/dev/null && "usage_$cmd"
-        ;;
-    esac
-    "cmd_$cmd" "$@"
+    run "$@"
     ;;
 
   ## Uncomment below snippet if you don't want a wrapper.
@@ -72,8 +112,11 @@ case "$1" in
     ;;
   -)
     shift
-    ;&
+    # The following line is commented to support old versions of bash.
+    # ;&
     # Fall through
+    WRAPPER "$@"
+    ;;
   *)
     WRAPPER "$@"
     ;;
