@@ -1,0 +1,23 @@
+# For more info, please visit
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+version: "3"
+
+services:
+  # For more info, please visit https://hub.docker.com/_/nginx
+  nginx:
+    image: nginx:1.19.6-alpine
+    restart: always
+    volumes:
+      # - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./conf.d:/etc/nginx/conf.d
+      - /etc/certs:/etc/certs
+    ports:
+      - "80:80"
+      - "443:443"
+
+## Uncomment below if you have an external attachable network.
+# networks:
+#   default:
+#     external:
+#       name: public
