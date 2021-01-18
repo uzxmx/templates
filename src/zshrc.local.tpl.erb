@@ -65,3 +65,11 @@ if [ -n "$ANDROID_SDK_ROOT" ]; then
     PATH="$ANDROID_SDK_ROOT/build-tools/$ANDROID_CURRENT_BUILD_TOOLS_VERSION:$PATH"
   fi
 fi
+
+# Flutter
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+<% unless is_wsl -%>
+FLUTTER_HOME=~/flutter
+PATH="$FLUTTER_HOME/bin:$PATH"
+<% end -%>
