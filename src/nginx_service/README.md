@@ -1,3 +1,13 @@
+## How to run
+
+```
+# For non-swarm mode
+docker-compose up -d
+
+# For swarm mode
+docker stack deploy --compose-file docker-compose.yml nginx
+```
+
 ## Get certificate
 
 Below, we use aliyun DNS API to apply for a certificate from Let's encrypt.
