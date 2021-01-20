@@ -1,0 +1,20 @@
+# For more info, please visit
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+version: "3"
+
+services:
+  # For more info, please visit https://hub.docker.com/_/mysql
+  mysql:
+    image: mysql:5.7.32
+    environment:
+      - MYSQL_ROOT_PASSWORD=YOUR_PASSWORD
+    restart: always
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+## Uncomment below if you have an external attachable network.
+# networks:
+#   default:
+#     external:
+#       name: public
