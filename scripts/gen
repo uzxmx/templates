@@ -82,6 +82,25 @@ gen_mysql_service() {
   gen --ask-filename --ask-filename-default "mysql" mysql_service
 }
 
+gen_react_spa() {
+  if ! type npx &>/dev/null; then
+    echo 'Cannot find npx. You can visit https://github.com/facebook/create-react-app for more help.'
+    exit 1
+  fi
+
+  local name
+  source "$dotfiles_dir/scripts/lib/prompt.sh"
+  while true; do
+    ask_for_input name "Project name: " my-app
+    if [ ! -e "$(pwd)/$name" ]; then
+      break
+    fi
+    echo "File $(pwd)/$name already exists."
+    unset name
+  done
+  npx create-react-app "$name"
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -97,4 +116,5 @@ Random string, password, etc.\tgen_password
 UUID\tgen_uuid
 Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
-Mysql docker-compose service\tgen_mysql_service"
+Mysql docker-compose service\tgen_mysql_service
+React single-page application\tgen_react_spa"
