@@ -101,6 +101,14 @@ gen_react_spa() {
   npx create-react-app "$name"
 }
 
+gen_export_options() {
+  if [ "$#" -gt 0 ]; then
+    gen "$@" ExportOptions.plist
+  else
+    gen -e ExportOptions.plist
+  fi
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -117,4 +125,5 @@ UUID\tgen_uuid
 Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
 Mysql docker-compose service\tgen_mysql_service
-React single-page application\tgen_react_spa"
+React single-page application\tgen_react_spa
+Xcode export options plist\tgen_export_options"
