@@ -1,0 +1,50 @@
+# vi: ft=sh
+
+_gen_java_common_process() {
+  local name="$1"
+  local is_test="$2"
+  source "$dotfiles_dir/scripts/lib/utils/substr_index.sh"
+  local substr="/src/main/java/"
+  local index="$(substr_rindex "$calling_path" "$substr")"
+  if [ "$index" = "-1" ]; then
+    echo "Cannot determine the package, please follow the standard folder structure of a Java project."
+    exit 1
+  fi
+
+  export GEN_JAVA_ROOT="${calling_path:0:$(($index))}"
+  local package="${calling_path:$(($index + ${#substr}))}"
+  if [ -f "$calling_path" ]; then
+    package="$(dirname "$package")"
+  fi
+
+  local file
+  source "$dotfiles_dir/scripts/lib/prompt.sh"
+  ask_for_input file "New java file: " "$package/$name"
+
+  export GEN_JAVA_NAME="$(basename "$file")"
+  GEN_JAVA_NAME="${GEN_JAVA_NAME%.java}"
+
+  package="$(dirname "$file")"
+  if [ ! "$package" = "." ]; then
+    export GEN_JAVA_PACKAGE="$(echo "$package" | tr / .)"
+    export GEN_JAVA_QUALIFIED_NAME="$GEN_JAVA_PACKAGE.$GEN_JAVA_NAME"
+  else
+    export GEN_JAVA_QUALIFIED_NAME="$GEN_JAVA_NAME"
+  fi
+
+  if [ "$is_test" = "1" ]; then
+    export GEN_JAVA_OUTPUT_PATH="$GEN_JAVA_ROOT/src/test/java/$(echo "$GEN_JAVA_QUALIFIED_NAME" | tr . /).java"
+  else
+    export GEN_JAVA_OUTPUT_PATH="$GEN_JAVA_ROOT/src/main/java/$(echo "$GEN_JAVA_QUALIFIED_NAME" | tr . /).java"
+  fi
+}
+
+gen_java_junit_test() {
+  local name
+  if [ -f "$calling_path" ]; then
+    name="$(basename "$calling_path")"
+  fi
+
+  _gen_java_common_process "${name%.java}Test" 1
+  gen -f "$GEN_JAVA_OUTPUT_PATH" Test.java
+}

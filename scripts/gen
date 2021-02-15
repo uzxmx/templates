@@ -109,6 +109,8 @@ gen_export_options() {
   fi
 }
 
+source "$(dirname "$BASH_SOURCE")/gen_java"
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -126,4 +128,5 @@ Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
 Mysql docker-compose service\tgen_mysql_service
 React single-page application\tgen_react_spa
-Xcode export options plist\tgen_export_options"
+Xcode export options plist\tgen_export_options
+Java JUnit test\tgen_java_junit_test"
