@@ -39,12 +39,12 @@ _gen_java_common_process() {
   fi
 }
 
-gen_java_junit_test() {
+gen_java() {
   local name
   if [ -f "$calling_path" ]; then
     name="$(basename "$calling_path")"
   fi
 
   _gen_java_common_process "${name%.java}Test" 1
-  gen -f "$GEN_JAVA_OUTPUT_PATH" Test.java
+  gen -f "$GEN_JAVA_OUTPUT_PATH" "$1"
 }

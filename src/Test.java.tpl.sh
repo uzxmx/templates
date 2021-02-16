@@ -4,6 +4,6 @@ public class ${GEN_JAVA_NAME} {
 
     @Test
     public void testFoo() {
-        System.out.println("foo");
+        System.out.println(\"foo\");
     }
 }
