@@ -109,6 +109,34 @@ gen_export_options() {
   fi
 }
 
+gen_flyway_migration() {
+  source "$dotfiles_dir/scripts/lib/utils/find.sh"
+  local result="$(find_file_hierarchical_with_candidates . pom.xml build.gradle)"
+  if [ -z "$result" ]; then
+    echo "Cannot find the root directory of current project."
+    exit 1
+  fi
+  local migration_dir="$(dirname "$result")/src/main/resources/db/migration"
+  mkdir -p "$migration_dir"
+
+  local prefix="V$(date "+%Y%m%d%H%M%S")__"
+  local file="$migration_dir/$prefix"
+  local name dst
+  source "$dotfiles_dir/scripts/lib/prompt.sh"
+  while true; do
+    ask_for_input name "Script name: $prefix"
+    dst="$file$name.sql"
+    if [ ! -e "$dst" ]; then
+      break
+    fi
+    echo "File $dst already exists."
+    unset name
+  done
+
+  touch "$dst"
+  "${EDITOR:-vim}" "$dst"
+}
+
 source "$(dirname "$BASH_SOURCE")/gen_java"
 
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
@@ -131,4 +159,5 @@ React single-page application\tgen_react_spa
 Xcode export options plist\tgen_export_options
 Java JUnit 4 test\tgen_java Test.java
 Java JUnit 4 Spring controller test\tgen_java ControllerTest.java
-Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java"
+Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java
+Flyway DB migration sql script\tgen_flyway_migration"
