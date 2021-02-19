@@ -101,7 +101,7 @@ gen_react_spa() {
   npx create-react-app "$name"
 }
 
-gen_export_options() {
+gen_xcode_export_options() {
   if [ "$#" -gt 0 ]; then
     gen "$@" ExportOptions.plist
   else
@@ -156,7 +156,7 @@ Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
 Mysql docker-compose service\tgen_mysql_service
 React single-page application\tgen_react_spa
-Xcode export options plist\tgen_export_options
+Xcode export options plist\tgen_xcode_export_options
 Java JUnit 4 test\tgen_java Test.java
 Java JUnit 4 Spring controller test\tgen_java ControllerTest.java
 Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java
