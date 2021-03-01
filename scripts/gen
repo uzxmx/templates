@@ -160,4 +160,5 @@ Xcode export options plist\tgen_xcode_export_options
 Java JUnit 4 test\tgen_java Test.java
 Java JUnit 4 Spring controller test\tgen_java ControllerTest.java
 Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java
+Java Spring Data JPA repositories\tgen_jpa_repositories
 Flyway DB migration sql script\tgen_flyway_migration"

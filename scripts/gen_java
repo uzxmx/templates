@@ -1,28 +1,57 @@
 # vi: ft=sh
 
-_gen_java_common_process() {
-  local name="$1"
-  local is_test="$2"
+_parse_java_name() {
+  local name="$(basename "$1")"
+  echo "${name%.java}"
+}
+
+_parse_java_package() {
+  local package root
+  _parse_java_package_and_get_root package root "$1" "$2"
+  echo "$package"
+}
+
+_parse_java_package_and_get_root() {
+  local package_var="$1"
+  local root_var="$2"
+  local filepath="$3"
+  local convert_slash_to_dot="${4:-1}"
+
   source "$dotfiles_dir/scripts/lib/utils/substr_index.sh"
+
   local substr="/src/main/java/"
-  local index="$(substr_rindex "$calling_path" "$substr")"
+  local index="$(substr_rindex "$filepath" "$substr")"
   if [ "$index" = "-1" ]; then
     echo "Cannot determine the package, please follow the standard folder structure of a Java project."
     exit 1
   fi
 
-  export GEN_JAVA_ROOT="${calling_path:0:$(($index))}"
-  local package="${calling_path:$(($index + ${#substr}))}"
-  if [ -f "$calling_path" ]; then
-    package="$(dirname "$package")"
+  eval $root_var="${filepath:0:$(($index))}"
+  local _package="${filepath:$(($index + ${#substr}))}"
+  if [ -f "$filepath" ] || [[ "$filepath" =~ \.java$ ]]; then
+    _package="$(dirname "$_package")"
   fi
+
+  if [ "$convert_slash_to_dot" = "1" ]; then
+    _package="$(echo "$_package" | tr / .)"
+  fi
+  eval $package_var="$_package"
+}
+
+_gen_java_common_process() {
+  local name="$1"
+  local is_test="$2"
+
+  package=""
+  root=""
+  _parse_java_package_and_get_root package root "$calling_path" 0
+  export GEN_JAVA_ROOT="$root"
 
   local file
   source "$dotfiles_dir/scripts/lib/prompt.sh"
   ask_for_input file "New java file: " "$package/$name"
 
-  export GEN_JAVA_NAME="$(basename "$file")"
-  GEN_JAVA_NAME="${GEN_JAVA_NAME%.java}"
+  export GEN_JAVA_NAME="$(_parse_java_name "$file")"
 
   package="$(dirname "$file")"
   if [ ! "$package" = "." ]; then
@@ -47,4 +76,24 @@ gen_java() {
 
   _gen_java_common_process "${name%.java}Test" 1
   gen -f "$GEN_JAVA_OUTPUT_PATH" "$1"
+}
+
+gen_jpa_repositories() {
+  source "$dotfiles_dir/scripts/lib/prompt.sh"
+  local base_class
+  ask_for_input base_class "Extends: "
+
+  local entity_file
+  while read entity_file; do
+    local repository_file="$(echo "$entity_file" | sed "s:/entity/:/repository/:" | sed "s:\(.*\)\.java:\1Repository.java:")"
+    [ -f "$repository_file" ] && continue
+
+    export GEN_JAVA_PACKAGE="$(_parse_java_package "$repository_file")"
+    export GEN_JAVA_NAME="$(_parse_java_name "$repository_file")"
+    export GEN_JAVA_IMPORTS="import $(_parse_java_package "$entity_file").$(_parse_java_name "$entity_file");\nimport foo;"
+    export GEN_JAVA_EXTENDS="$base_class<$(_parse_java_name "$entity_file"), Long>"
+
+    gen -f "$repository_file" Interface.java >/dev/null
+    exit 1
+  done < <(find . -path "*/src/main/java/*/entity/*.java")
 }

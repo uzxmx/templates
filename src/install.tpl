@@ -5,6 +5,27 @@
 
 set -eo pipefail
 
+usage() {
+  cat <<-EOF
+Usage: $0 [version]
+EOF
+  exit 1
+}
+
+remainder=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -*)
+      usage
+      ;;
+    *)
+      remainder+=("$1")
+      ;;
+  esac
+  shift
+done
+set - "${remainder[@]}"
+
 type -p NAME &> /dev/null && exit
 
 . $(dirname "$BASH_SOURCE")/../lib/install.sh
