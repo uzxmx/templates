@@ -1,4 +1,8 @@
-## Global ARG will be passed in each build stage.
+## An ARG declared before a FROM is outside of a build stage,
+## so it can’t be used in any instruction after a FROM.
+## To use the default value of an ARG declared before the first
+## FROM use an ARG instruction without a value inside of a build stage.
+## Ref: https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 # ARG YOUR_ARG
 
 # Find available versions at https://hub.docker.com/_/node
