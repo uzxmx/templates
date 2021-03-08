@@ -30,6 +30,10 @@ gen_autossh() {
   gen -f "$HOME/Library/LaunchAgents/autossh.plist" -e autossh.plist
 }
 
+gen_autossh_sysvinit() {
+  gen -f "/etc/init.d/autossh" -x --sudo -e autossh.sysvinit
+}
+
 gen_appium() {
   gen -f "$HOME/Library/LaunchAgents/appium.plist" -e appium.plist
 }
@@ -139,6 +143,14 @@ gen_flyway_migration() {
 
 source "$(dirname "$BASH_SOURCE")/gen_java"
 
+gen_openssl_conf() {
+  if [ "$#" -gt 0 ]; then
+    gen "$@" openssl.conf
+  else
+    gen -e openssl.conf
+  fi
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -149,6 +161,7 @@ SSH hosts for wrapper utility\tgen_ssh_hosts
 Maven settings\tgen_mvn_settings
 Editor config\tgen_editorconfig
 Autossh plist file for Mac OSX\tgen_autossh
+Autossh SysV init script\tgen_autossh_sysvinit
 Appium plist file for Mac OSX\tgen_appium
 Random string, password, etc.\tgen_password
 UUID\tgen_uuid
@@ -161,4 +174,5 @@ Java JUnit 4 test\tgen_java Test.java
 Java JUnit 4 Spring controller test\tgen_java ControllerTest.java
 Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java
 Java Spring Data JPA repositories\tgen_jpa_repositories
-Flyway DB migration sql script\tgen_flyway_migration"
+Flyway DB migration sql script\tgen_flyway_migration
+OpenSSL configuration file\tgen_openssl_conf"
