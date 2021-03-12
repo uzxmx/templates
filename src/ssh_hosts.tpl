@@ -41,5 +41,11 @@
   {
     "label": "host-with-expect-script",
     "command": "expect -c 'spawn {{COMMAND_QUOTED}}; expect \"\\\\$\"; send \"echo foo\\n\"; interact'"
+  },
+  {
+    "label": "host-with-only-password-enabled",
+    "host": "host",
+    "user": "user",
+    "command": "auto_password 'password' {{COMMAND}}"
   }
 ]
