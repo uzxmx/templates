@@ -26,9 +26,14 @@ while [ $# -gt 0 ]; do
 done
 set - "${remainder[@]}"
 
+dotfiles_dir="$(realpath "$(dirname "$BASH_SOURCE")/../..")"
+
+source "$dotfiles_dir/scripts/lib/path.sh"
+PATH="$(new_path_exclude "$dotfiles_dir/bin")"
+
 type -p NAME &> /dev/null && exit
 
-. $(dirname "$BASH_SOURCE")/../lib/install.sh
+source "$dotfiles_dir/scripts/lib/install.sh"
 
 # if is_mac; then
 #   brew_install NAME
@@ -61,7 +66,7 @@ else
   abort "Unsupported system"
 fi
 
-~/.dotfiles/bin/cget "$platform-$version.tar.xz" "$path_to_save"
+"$dotfiles_dir/bin/cget" "$platform-$version.tar.xz" "$path_to_save"
 
 cd /tmp && tar Jxf "$path_to_save"
 
