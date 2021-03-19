@@ -16,6 +16,8 @@ services:
       # Use `/tmp/shared` as a mount point for shared files, so we don't need to
       # copy files into the container.
       - /tmp/shared:/tmp/shared
+    ports:
+      - "3306:3306"
 
 ## Uncomment below if you have an external attachable network.
 # networks:
