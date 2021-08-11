@@ -54,7 +54,8 @@ COPY config.ru Rakefile ./
 
 RUN mkdir -p tmp log
 
-COPY docker-entrypoint.sh /
+# UPDATE-ME
+COPY YOUR-DOCKER-DIRECTORY-NAME/docker-entrypoint.sh /
 
 expose 3000
 
