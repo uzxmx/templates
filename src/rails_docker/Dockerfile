@@ -9,8 +9,12 @@ COPY Gemfile* ./
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   # For build essentials, e.g. gcc.
   && apk add --no-cache --virtual .build-deps build-base \
-  # For mysql and timezone.
-  && apk add --no-cache mariadb-dev tzdata \
+  # For timezone.
+  && apk add --no-cache tzdata \
+  # For postgresql.
+  && apk add --no-cache postgresql-dev \
+  # For mysql.
+  # && apk add --no-cache mariadb-dev \
   && bundle config mirror.https://rubygems.org https://gems.ruby-china.com \
   && bundle install --without development test \
   && apk del .build-deps
