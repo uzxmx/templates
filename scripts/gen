@@ -151,6 +151,14 @@ gen_openssl_conf() {
   fi
 }
 
+gen_systemd_service() {
+  if [ "$#" -gt 0 ]; then
+    gen "$@" systemd.service
+  else
+    gen -p -e --ext service systemd.service
+  fi
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -176,4 +184,5 @@ Java JUnit 4 Spring boot test\tgen_java SpringBootTest.java
 Java Spring Data JPA repositories\tgen_jpa_repositories
 Flyway DB migration sql script\tgen_flyway_migration
 OpenSSL configuration file\tgen_openssl_conf
-CoreDNS config file\tgen Corefile"
+CoreDNS config file\tgen Corefile
+Systemd service config file\tgen_systemd_service"
