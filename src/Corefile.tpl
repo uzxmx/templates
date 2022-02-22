@@ -17,3 +17,9 @@
   errors
   log
 }
+
+example.com., example.org. {
+  # See https://coredns.io/plugins/log/#log-format
+  log . "Gateway: {remote}:{port} - {>id} \"{type} {class} {name} {proto} {size} {>do} {>bufsize}\" {rcode} {>rflags} {rsize} {duration}"
+  forward . 192.168.3.1:53
+}
