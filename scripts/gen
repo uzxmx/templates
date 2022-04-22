@@ -159,6 +159,30 @@ gen_systemd_service() {
   fi
 }
 
+gen_wechat_miniprogram_page() {
+  local name
+  source "$dotfiles_dir/scripts/lib/prompt.sh"
+  while true; do
+    ask_for_input name "Page name: "
+    if [ ! -e "$name" ]; then
+      break
+    fi
+    echo "Directory $name already exists."
+    unset name
+  done
+
+  gen -f "$name" wechat_miniprogram_page
+
+  if [ ! "$name" = "page" ]; then
+    cd "$name"
+    local file ext
+    while read file; do
+      ext="$(echo "$file" | awk -F. '{print $NF}')"
+      mv "$file" "$name.$ext"
+    done < <(ls .)
+  fi
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -185,4 +209,5 @@ Java Spring Data JPA repositories\tgen_jpa_repositories
 Flyway DB migration sql script\tgen_flyway_migration
 OpenSSL configuration file\tgen_openssl_conf
 CoreDNS config file\tgen Corefile
-Systemd service config file\tgen_systemd_service"
+Systemd service config file\tgen_systemd_service
+Wechat miniprogram page\tgen_wechat_miniprogram_page"
