@@ -1,0 +1,20 @@
+# For more info, please visit
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+version: "3"
+
+services:
+  # For more info, please visit https://www.elastic.co/guide/en/kibana/current/docker.html
+  kibana:
+    # Find a version at https://github.com/elastic/dockerfiles/tree/7.12/kibana
+    image: docker.elastic.co/kibana/kibana:7.12.1
+    environment:
+      SERVER_NAME: kibana.example.org
+      ELASTICSEARCH_HOSTS: http://elasticsearch.example.org
+    restart: always
+
+## Uncomment below if you have an external attachable network.
+# networks:
+#   default:
+#     external:
+#       name: public
