@@ -1,6 +1,9 @@
 # vi: ft=nginx
 #
 # For more information, please visit http://nginx.org/en/docs/.
+#
+# Note: this file is disabled by default. If you want to enable it, remember to
+# delete the `.disabled` suffix from the filename.
 
 # Redirect http to https.
 server {
@@ -21,10 +24,10 @@ server {
   ssl_certificate_key /etc/certs/example.com/key.pem;
 
   ## Enable OCSP stapling.
-  #ssl_stapling on;
-  #ssl_stapling_verify on;
-  #resolver 127.0.0.11;
-  #resolver 8.8.8.8;
+  # ssl_stapling on;
+  # ssl_stapling_verify on;
+  # resolver 127.0.0.11;
+  # resolver 8.8.8.8;
 
   location / {
     proxy_set_header Host $host;
