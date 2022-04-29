@@ -5,8 +5,14 @@
 ## Ref: https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 # ARG YOUR_ARG
 
+# When the value of `CDN_HOST` is `CDN_HOST_STUB`, you can set an env variable
+# `CDN_HOST_STUB_VALUE` to configure the CDN host on the fly when running the
+# image.
+ARG CDN_HOST
+
 # Find available versions at https://hub.docker.com/_/node
 FROM node:12.20.0-alpine3.12 AS build
+ARG CDN_HOST
 
 WORKDIR /app
 
@@ -52,6 +58,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN npm run build
 
 FROM nginx:1.19.6-alpine
+ARG CDN_HOST
 
 COPY --from=build /app/dist /app
 
@@ -60,7 +67,9 @@ COPY docker/docker-entrypoint.sh /
 
 RUN mkdir -p /app/nginx/conf.d
 
-ENV API_PROXY_ENABLED
+ENV NGINX_API_PROXY_ENABLED
+ENV NGINX_API_PROXY_URL
+ENV CDN_HOST=$CDN_HOST
 # ENV LANG="en_US.UTF-8" \
 #     LANGUAGE="en_US.UTF-8" \
 #     LC_ALL="en_US.UTF-8" \

@@ -2,9 +2,8 @@
 
 When dealing with CORS, you may want to use nginx server as a proxy to forward
 requests to the API server. To do so, you can set the environment variable
-`API_PROXY_ENABLED` to `true` like below. Remember also to update the host in
-[docker-entrypoint.sh](docker-entrypoint.sh).
+`NGINX_API_PROXY_ENABLED` and `NGINX_API_PROXY_URL` like below.
 
 ```
-docker run -e API_PROXY_ENABLED=true ...
+docker run -e NGINX_API_PROXY_ENABLED=true -e NGINX_API_PROXY_URL=https://example.com ...
 ```
