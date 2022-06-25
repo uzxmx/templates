@@ -1,7 +1,7 @@
 # For more info, please visit
 # https://docs.docker.com/compose/compose-file/compose-file-v3/
 
-version: "3"
+version: "3.4"
 
 services:
   # For more info, please visit https://hub.docker.com/_/nginx
@@ -19,6 +19,18 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: pause
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "80"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 ## Uncomment below if you have an external attachable network.
 # networks:
