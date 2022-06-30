@@ -17,6 +17,9 @@ services:
       - ./site:/site
       # - /etc/certs:/etc/certs
     ports:
+      # Note that IPv6 is not supported with swarm ingress networking. So if
+      # `localhost` resolves to `::1` according to `/etc/hosts`, running
+      # `curl localhost:80` may get stuck. Instead, you can run `curl 127.0.0.1:80`.
       - "80:80"
       - "443:443"
     deploy:
