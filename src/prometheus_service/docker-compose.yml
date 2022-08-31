@@ -1,0 +1,41 @@
+# For more info, please visit
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+version: "3.4"
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.38.0
+    restart: always
+    # This doesn't work on Mac OSX.
+    # network_mode: host
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      # Note that IPv6 is not supported with swarm ingress networking. So if
+      # `localhost` resolves to `::1` according to `/etc/hosts`, running
+      # `curl localhost:9090` may get stuck. Instead, you can run `curl 127.0.0.1:9090`.
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana-oss:9.1.2
+    # This doesn't work on Mac OSX.
+    # network_mode: host
+    environment:
+      # The default account is `admin`.
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # The home dashboard to show by default.
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/spring_boot.json
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      # Note that IPv6 is not supported with swarm ingress networking. So if
+      # `localhost` resolves to `::1` according to `/etc/hosts`, running
+      # `curl localhost:3000` may get stuck. Instead, you can run `curl 127.0.0.1:3000`.
+      - "3000:3000"
+
+## Uncomment below if you have an external attachable network.
+# networks:
+#   default:
+#     external:
+#       name: public

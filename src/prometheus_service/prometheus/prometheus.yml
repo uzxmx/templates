@@ -1,0 +1,14 @@
+scrape_configs:
+  # Make Prometheus scrape itself for metrics.
+  - job_name: "Prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "Spring Boot Application"
+    metrics_path: "/actuator/prometheus"
+    scrape_interval: 5s
+    static_configs:
+      # For Mac OSX, the target should be `host.docker.internal:8080`.
+      - targets: ["app.host:8080"]
+        labels:
+          application: "My Spring Boot Application"
