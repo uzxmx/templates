@@ -19,26 +19,16 @@ docker stack deploy --compose-file docker-compose.yml nginx
 ## Get certificate
 
 Below, we use aliyun DNS API to apply for a certificate from Let's encrypt.
+The utility `acme` is from [here](https://github.com/uzxmx/dotfiles/blob/master/bin/acme).
 
 ```
-git clone --depth 1 https://github.com/acmesh-official/acme.sh.git
-cd ./acme.sh
-./acme.sh --install
-
 export Ali_Key="YOUR_KEY"
 export Ali_Secret="YOUR_SECRET"
 
-acme.sh --issue --dns dns_ali -d "*.example.com"
-```
+acme issue -d dns_ali example.com "*.example.com"
 
-## Install the certificate
-
-```
+# Install the certificate.
 sudo mkdir -p /etc/certs && sudo chown "$(whoami):$(id -Gn | awk '{print $1}')" /etc/certs
 mkdir /etc/certs/example.com
-
-acme.sh --install-cert -d "*.example.com" \
-  --key-file /etc/certs/example.com/key.pem \
-  --fullchain-file /etc/certs/example.com/cert.pem \
-  --reloadcmd "docker restart nginx_nginx_1"
+acme install example.com -t /etc/certs/example.com -r "docker restart nginx_nginx_1"
 ```
