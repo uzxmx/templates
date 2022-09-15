@@ -22,6 +22,7 @@ services:
       # `curl localhost:80` may get stuck. Instead, you can run `curl 127.0.0.1:80`.
       - "80:80"
       - "443:443"
+      - "8090:8090"
     # deploy:
     #   replicas: 2
     #   update_config:
