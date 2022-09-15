@@ -40,7 +40,9 @@ server {
     # See https://serverfault.com/a/834314
     proxy_http_version 1.1;
 
-    proxy_set_header Host $host;
+    # Use `$http_host` here instead of `$host`, this is useful when the upstream sends a redirect response.
+    proxy_set_header Host $http_host;
+
     proxy_set_header X-Real-IP $remote_addr;
     # Use this to let nginx start even though upstream host is unavailable or down.
     set $upstream host:3000;
