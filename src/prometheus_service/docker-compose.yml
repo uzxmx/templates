@@ -4,6 +4,9 @@
 version: "3.4"
 
 services:
+  # Do not use `_` in the service name. Servers such as Tomcat may return
+  # 400 bad request because of the invalid Host header.
+  # Host name can only contain alphanumeric(a-zA-Z0-9), hyphen(-) and period(.).
   prometheus:
     image: prom/prometheus:v2.38.0
     restart: always
@@ -16,6 +19,14 @@ services:
       # `localhost` resolves to `::1` according to `/etc/hosts`, running
       # `curl localhost:9090` may get stuck. Instead, you can run `curl 127.0.0.1:9090`.
       - "9090:9090"
+    # deploy:
+    #   placement:
+    #     constraints:
+    #       - "node.labels.prometheus==true"
+
+  # Do not use `_` in the service name. Servers such as Tomcat may return
+  # 400 bad request because of the invalid Host header.
+  # Host name can only contain alphanumeric(a-zA-Z0-9), hyphen(-) and period(.).
   grafana:
     image: grafana/grafana-oss:9.1.2
     # This doesn't work on Mac OSX.
@@ -33,6 +44,10 @@ services:
       # `localhost` resolves to `::1` according to `/etc/hosts`, running
       # `curl localhost:3000` may get stuck. Instead, you can run `curl 127.0.0.1:3000`.
       - "3000:3000"
+    # deploy:
+    #   placement:
+    #     constraints:
+    #       - "node.labels.prometheus==true"
 
 ## Uncomment below if you have an external attachable network.
 # networks:

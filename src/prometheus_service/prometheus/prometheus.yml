@@ -12,3 +12,17 @@ scrape_configs:
       - targets: ["app.host:8080"]
         labels:
           application: "My Spring Boot Application"
+
+  ## If you have multiple replicas in the swarm cluster, you can use
+  ## `dns_sd_configs` to scrape them all.
+  #
+  # - job_name: "Spring Boot Application with Multiple Replicas"
+  #   metrics_path: "/actuator/prometheus"
+  #   scrape_interval: 5s
+  #   dns_sd_configs:
+  #     - names: ["tasks.foo-service"]
+  #       type: A
+  #       port: 8080
+  #   relabel_configs:
+  #     - target_label: application
+  #       replacement: "My Spring Boot Application"
