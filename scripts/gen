@@ -86,6 +86,14 @@ gen_mysql_service() {
   gen --ask-filename --ask-filename-default "mysql" mysql_service
 }
 
+gen_prometheus_service() {
+  gen --ask-filename --ask-filename-default "prometheus" prometheus_service
+}
+
+gen_mongo_service() {
+  gen --ask-filename --ask-filename-default "mongo" mongo_service
+}
+
 gen_react_spa() {
   if ! type npx &>/dev/null; then
     echo 'Cannot find npx. You can visit https://github.com/facebook/create-react-app for more help.'
@@ -176,6 +184,8 @@ UUID\tgen_uuid
 Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
 Mysql docker-compose service\tgen_mysql_service
+Prometheus docker-compose service\tgen_prometheus_service
+Mongo docker-compose service\tgen_mongo_service
 React single-page application\tgen_react_spa
 Xcode export options plist\tgen_xcode_export_options
 Java JUnit 4 test\tgen_java Test.java

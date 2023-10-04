@@ -10,6 +10,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=YOUR_PASSWORD
     restart: always
+    # Disable ONLY_FULL_GROUP_BY.
+    # Ref: https://stackoverflow.com/q/41887460
+    command: --sql_mode=""
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -18,6 +21,15 @@ services:
       - /tmp/shared:/tmp/shared
     ports:
       - "3306:3306"
+    deploy:
+      # See https://docs.docker.com/compose/compose-file/compose-file-v3/#placement
+      # https://docs.docker.com/engine/swarm/services/#placement-constraints
+      placement:
+        constraints:
+          - "node.role==manager"
+          - "engine.labels.operatingsystem==ubuntu 18.04"
+        preferences:
+          - spread: node.labels.zone
 
 ## Uncomment below if you have an external attachable network.
 # networks:

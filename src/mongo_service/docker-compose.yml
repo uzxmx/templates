@@ -7,17 +7,17 @@ services:
   # Do not use `_` in the service name. Servers such as Tomcat may return
   # 400 bad request because of the invalid Host header.
   # Host name can only contain alphanumeric(a-zA-Z0-9), hyphen(-) and period(.).
-  redis:
-    # For more info, please visit https://hub.docker.com/_/redis
-    image: redis:6.2.0
+  mongo:
+    # For more info, please visit https://hub.docker.com/_/mongo
+    image: mongo:6.0.2
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=YOUR_PASSWORD
     restart: always
     volumes:
-      - ./config:/config
-      - ./data/redis:/data
+      - ./data/db:/data/db
     ports:
-      - 6379:6379
-    # https://docs.docker.com/compose/compose-file/#command
-    command: redis-server /config/redis.conf
+      - 27017:27017
 
 ## Uncomment below if you have an external attachable network.
 # networks:
