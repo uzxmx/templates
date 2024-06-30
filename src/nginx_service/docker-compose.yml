@@ -23,6 +23,18 @@ services:
       - "80:80"
       - "443:443"
       - "8090:8090"
+
+      # If we want to show the real client IP in nginx log or forward the real
+      # IP to proxy, we need to use `host` mode as shown below.
+      #
+      # - mode: host
+      #   protocol: tcp
+      #   published: 80
+      #   target: 80
+      # - mode: host
+      #   protocol: tcp
+      #   published: 443
+      #   target: 443
     # deploy:
     #   replicas: 2
     #   update_config:
