@@ -86,6 +86,10 @@ gen_mysql_service() {
   gen --ask-filename --ask-filename-default "mysql" mysql_service
 }
 
+gen_redis_service() {
+  gen --ask-filename --ask-filename-default "redis" redis_service
+}
+
 gen_prometheus_service() {
   gen --ask-filename --ask-filename-default "prometheus" prometheus_service
 }
@@ -167,6 +171,14 @@ gen_systemd_service() {
   fi
 }
 
+gen_lldbinit_post() {
+  if [ "$#" -gt 0 ]; then
+    gen "$@" lldbinit.post
+  else
+    gen -e lldbinit.post
+  fi
+}
+
 FZF_COMMANDS="Bin wrapper or plain old executable\tgen_bin_wrapper
 Installation script\tgen_install
 MIT license\tgen_license
@@ -184,6 +196,7 @@ UUID\tgen_uuid
 Local zshrc\tgen_zshrc_local
 Nginx docker-compose service\tgen_nginx_service
 Mysql docker-compose service\tgen_mysql_service
+Redis docker-compose service\tgen_redis_service
 Prometheus docker-compose service\tgen_prometheus_service
 Mongo docker-compose service\tgen_mongo_service
 React single-page application\tgen_react_spa
@@ -195,4 +208,5 @@ Java Spring Data JPA repositories\tgen_jpa_repositories
 Flyway DB migration sql script\tgen_flyway_migration
 OpenSSL configuration file\tgen_openssl_conf
 CoreDNS config file\tgen Corefile
+LLDB init post file\tgen_lldbinit_post
 Systemd service config file\tgen_systemd_service"
